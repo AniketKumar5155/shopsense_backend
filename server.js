@@ -13,6 +13,7 @@ const routeNotFoundhandler = require("./middlewares/routeNotFoundHandler");
 const errorHandler = require("./middlewares/errorHandler");
 const otpRouter = require("./routes/otpRoutes");
 const authRouter = require("./routes/authRoutes");
+const refreshTokenRouter = require("./routes/refreshTokenRoutes");
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.get("/", (req, res) => {
 
 app.use("/otp", otpRouter);
 app.use("/auth", authRouter);
+app.use("/token", refreshTokenRouter);
 
 app.use(routeNotFoundhandler);
 app.use(errorHandler);

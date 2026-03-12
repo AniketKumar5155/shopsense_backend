@@ -1,6 +1,7 @@
 const { verifyOtpService } = require("../services/otpService");
 const generateToken = require("../utils/generateToken");
 const hashData = require("../utils/hashData");
+const cryptoData = require("../utils/crypto");
 const checkUserExists = require("./checkUserExist");
 const pool = require("../config/database");
 const verifyHashedData = require("../utils/veryifyHashedData");
@@ -39,16 +40,18 @@ const signupService = async (userData) => {
         );
 
         const userId = result.insertId;
+        const role = result.role;
 
         const payload = {
             userId,
             email,
-            username
+            username,
+            role,
         };
 
         const { accessToken, refreshToken } = generateToken(payload);
 
-        const hashedRefreshToken = await hashData(refreshToken);
+        const hashedRefreshToken = cryptoData(refreshToken);
 
         const expiresAt = new Date();
         expiresAt.setDate(expiresAt.getDate() + 7);
@@ -122,12 +125,13 @@ const loginService = async ({ identifier, password }) => {
         const payload = {
             userId: user.id,
             email: user.email,
-            username: user.username
+            username: user.username,
+            role: user.role,
         };
 
         const { accessToken, refreshToken } = generateToken(payload);
 
-        const hashedRefreshToken = await hashData(refreshToken);
+        const hashedRefreshToken = cryptoData(refreshToken);
 
         const expiresAt = new Date();
         expiresAt.setDate(expiresAt.getDate() + process.env.REFRESH_TOKEN_TTL_DAYS);
@@ -161,7 +165,8 @@ const loginService = async ({ identifier, password }) => {
 
 const logoutService = async (refreshToken) => {
     try {
-        const hashedToken = await hashData(refreshToken);
+
+        const hashedToken = cryptoData(refreshToken);
 
         await pool.query(
             `UPDATE refresh_tokens
