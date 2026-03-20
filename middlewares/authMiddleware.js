@@ -20,7 +20,6 @@ const authMiddleware = async (req, res, next) => {
       "SELECT id, name, email, role FROM users WHERE id = ? LIMIT 1",
       [decoded.userId]
     );
-
     if (rows.length === 0) {
       return res.status(403).json({
         success: false,

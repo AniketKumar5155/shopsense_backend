@@ -10,7 +10,7 @@ const refreshTokenController = asyncHandler(async (req, res) => {
     res.cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
         secure: true,
-        sameSite: "none",
+        samesSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
