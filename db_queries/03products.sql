@@ -13,7 +13,6 @@ CREATE TABLE products_items (
     stock INT DEFAULT 0,
     
     image_url VARCHAR(500),
-    category_id INT,
     
     is_active BOOLEAN DEFAULT TRUE,
     is_hidden BOOLEAN DEFAULT FALSE,
