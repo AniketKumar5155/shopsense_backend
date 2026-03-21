@@ -19,13 +19,18 @@ const createProductSchema = z.object({
     .number()
     .positive({ message: "Discounted price must be greater than 0" })
     .optional()
-    .refine((val, ctx) => {
-      if (val && ctx.parent.price && val > ctx.parent.price) {
+    .refine((data) => {
+      if (
+        data.discounted_price &&
+        data.price &&
+        data.discounted_price > data.price
+      ) {
         return false;
       }
       return true;
     }, {
       message: "Discounted price cannot be greater than original price",
+      path: ["discounted_price"],
     }),
 
   brand: z
@@ -50,7 +55,7 @@ const createProductSchema = z.object({
     .max(500, { message: "Image URL too long" })
     .optional(),
 
-  category: z
+  categories: z
     .array(
       z.coerce.number().int().positive("Invalid issue id")
     )
@@ -81,15 +86,19 @@ const updateProductSchema = z.object({
     .number()
     .positive({ message: "Discounted price must be greater than 0" })
     .optional()
-    .refine((val, ctx) => {
-      if (val && ctx.parent.price && val > ctx.parent.price) {
+    .refine((data) => {
+      if (
+        data.discounted_price &&
+        data.price &&
+        data.discounted_price > data.price
+      ) {
         return false;
       }
       return true;
     }, {
       message: "Discounted price cannot be greater than original price",
+      path: ["discounted_price"],
     }),
-
 
   brand: z
     .string()
@@ -113,7 +122,7 @@ const updateProductSchema = z.object({
     .max(500, { message: "Image URL too long" })
     .optional(),
 
-  category: z
+  categories: z
     .array(
       z.coerce.number().int().positive("Invalid issue id")
     )
@@ -127,7 +136,6 @@ const updateProductSchema = z.object({
     .boolean()
     .optional(),
 });
-
 
 module.exports = {
   createProductSchema,
